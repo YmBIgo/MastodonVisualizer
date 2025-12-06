@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Info } from "../type/Info";
 import { convertOneLeaf, convertTree } from "../util/convertTree";
 import { Link, useParams, useSearchParams } from "react-router-dom";
