@@ -102,11 +102,11 @@ const TreeIndex: React.FC<Props> = ({
                 { questionSuccessHistory.length === 0 && (<p>ありません。教材を解いてみてみましょう！</p>) }
                 { questionSuccessHistory.length > 0 && (
                     <ul>
-                        { questionSuccessHistory.slice(-6, -1).map((qh, i) => {
+                        { questionSuccessHistory.reverse().slice(0, 5).map((qh, i) => {
                             return (
                                 <li key={`question_history_${i}`}>
                                     <Link to={`/explore/${qh.json}?questionId=${qh.questionId}`}>
-                                        {qh.json} <br/> {qh.questionString} (正解した回数: {qh.successCount})
+                                        {qh.jsonTitle} <br/> {qh.questionString} (正解した回数: {qh.successCount})
                                     </Link>
                                 </li>
                             )
@@ -120,15 +120,15 @@ const TreeIndex: React.FC<Props> = ({
                 { questionHistory.length === 0 && (<p>ありません。教材を解いてみてみましょう！</p>) }
                 { questionHistory.length > 0 && (
                     <ul>
-                        { questionHistory.slice(-6, -1).map((qh, i) => {
+                        { questionHistory.reverse().slice(0, 5).map((qh, i) => {
                             return (
                                 <li key={`question_history_${i}`}>
                                     <Link to={`/explore/${qh.json}?questionId=${qh.questionId}&id=${qh.id}`}>
-                                        {qh.json} <br/> {qh.questionString} (間違えた回数: {qh.failCount})
+                                        {qh.jsonTitle} <br/> {qh.questionString} (間違えた回数: {qh.failCount})
                                     </Link>
                                 </li>
                             )
-                        }) }
+                        })}
                     </ul>
                 ) }
               </Box>
@@ -168,9 +168,10 @@ const TreeIndex: React.FC<Props> = ({
                     key={`info_${i.json}`}
                 >
                     <Link to={`/explore/${i.json}`}>
-                    {Math.floor(questionSuccessHistory.filter((q) => {
-                      return i.details.map((d) => d[0]).includes(q.questionId);
-                    }).length / i.details.length * 100)}% {i.name}</Link>
+                    {Math.floor(
+                      i.details.map((d) => d[0]).filter((q) => {
+                        return questionSuccessHistory.find((qsh) => qsh.json === i.json && qsh.questionId === q);
+                      }).length / i.details.length * 100)}% {i.name}</Link>
                 </li>
                 )
             }) }

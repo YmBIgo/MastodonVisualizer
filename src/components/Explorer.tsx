@@ -44,6 +44,7 @@ const Explorer: React.FC<Props> = ({
     const [currentChildren, setCurrentChildren] = useState<Tree[]>([]);
     const [question, setQuestion] = useState<string>("");
     const [questionId, setQuestionId] = useState<string>("");
+    const [questionName, setQuestionName] = useState<string>("");
     const [exploreQueue, setExploreQueue] = useState<Leaf[]>([]);
     const [currentExplorePos, setCurrentExplorePos] = useState(1);
     const [doJumpId, setDoJumpId] = useState<boolean>(false);
@@ -67,6 +68,7 @@ const Explorer: React.FC<Props> = ({
                 const sLeaves = info
                     ?.filter((i) => i.json === treeId)
                     ?.flatMap((ifi) => ifi.details) ?? [];
+                setQuestionName(info.find((i) => i.json === treeId)?.name || "");
                 setsearchLeaves(sLeaves);
                 setSearchLeavesSummary(info
                     ?.find((i) => i.json === treeId)
@@ -78,8 +80,11 @@ const Explorer: React.FC<Props> = ({
                 setCurrentChildren(convertedTreeContent.children);
                 setCurrentLeaf(convertedTreeContent.content);
                 setCode(convertedTreeContent.content.functionCodeContent ?? "コードはありません...");
-                let questionIdString = String(searchParams.get("questionId"));
-                const questionId = sLeaves.findIndex((sl) => sl[0] === questionIdString);
+                const questionIdString = String(searchParams.get("questionId"));
+                let questionId = sLeaves.findIndex((sl) => sl[0] === questionIdString);
+                if (questionId === -1) {
+                    questionId = 0;
+                }
                 setQuestion(sLeaves[questionId][1]);
                 setQuestionId(sLeaves[questionId][0]);
                 const queue = traverseTreeAndGetRoute(convertedTreeContent, sLeaves[0][0], [], []);
@@ -141,7 +146,7 @@ const Explorer: React.FC<Props> = ({
                         const newQuestionHistory: QuestionSuccessHistoryItem = {
                             json: treeId || "",
                             questionId: questionId,
-                            jsonTitle: treeId || "",
+                            jsonTitle: questionName || "",
                             questionString: question,
                             successCount: 1,
                         };
@@ -192,7 +197,7 @@ const Explorer: React.FC<Props> = ({
                     const newQuestionHistory: QuestionFailedHistoryItem = {
                         json: treeId || "",
                         questionId: questionId,
-                        jsonTitle: treeId || "",
+                        jsonTitle: questionName || "",
                         questionString: searchLeaves[questionIndex][1],
                         id: currentQueue,
                         failCount: 1,
