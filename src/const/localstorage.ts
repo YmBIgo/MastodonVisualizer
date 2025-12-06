@@ -1,0 +1,2 @@
+export const MATSODON_LOCALSTORAGE_FAILED_KEY = "mastodon_visualizer_localstorage_failed_key_v1";
+export const MATSODON_LOCALSTORAGE_SUCCESS_KEY = "mastodon_visualizer_localstorage_success_key_v1";
